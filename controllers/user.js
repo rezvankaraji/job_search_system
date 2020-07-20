@@ -6,7 +6,6 @@ const employer_model = require("../models/employer");
 
 module.exports = {
     signup: function(req, res){
-
         bcrypt.hash(req.body.password, 10)
             .then(hashed_password => {
                 let user;
@@ -19,7 +18,7 @@ module.exports = {
                         age: req.body.age,
                         gender: req.body.gender
                     });
-                }else if(req.params.role == 'employer'){
+                }else{
                     user = new employer_model({
                         company_name: req.body.company_name,
                         password: hashed_password,
@@ -27,10 +26,7 @@ module.exports = {
                         company_address: req.company_address,
                         company_phone: req.company_phone
                     });
-                }else{
-                    //unvalid user
                 }
-
                 user.save()
                     .then(result => {
                         res.status(201).json({
@@ -44,13 +40,10 @@ module.exports = {
                         });
                     });
             });
-
     },
 
     signin: function(req, res){
-
         let fetched_user;
-
         if(req.params.role == 'employee'){
             employee_model.findOne({user_name: req.body.user_name})
                 .then(user => {
@@ -71,8 +64,8 @@ module.exports = {
                     const token = jwt.sign(
                         {user_name: fetched_user.user_name, user_id: fetched_user._id},
                         'job_search_system_secret',
-                        { expiresIn: '1h' });
-                    
+                        { expiresIn: '1h' 
+                    });
                     res.status(200).json({
                         token: token,
                         expiresIn: '1h',
@@ -84,8 +77,7 @@ module.exports = {
                         message: "authentication failed!"
                     });
                 });
-
-        }else if(req.params.role == 'employer'){
+        }else{
             employer_model.findOne({company_name: req.body.company_name})
                 .then(user => {
                     if(!user){
@@ -105,8 +97,8 @@ module.exports = {
                     const token = jwt.sign(
                         {company_name: fetched_user.company_name, user_id: fetched_user._id},
                         'job_search_system_secret',
-                        { expiresIn: '1h' });
-                    
+                        { expiresIn: '1h' 
+                    });
                     res.status(200).json({
                         token: token,
                         expiresIn: '1h',
@@ -118,12 +110,54 @@ module.exports = {
                         message: "authentication failed!"
                     });
                 });
-
-        }else{
-            //unvalid user
         }
+    },
 
-        
+    edit_profile: function(req, res){
+        if(req.body.decoded_token.user_name){   //employee
+            const employee = new employee_model({
+                _id: req.body.decoded_token.user_id,
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                age: req.body.age,
+                //cv: req.body.cv,
+                skills: req.body.skills
+            });
+            employee_model.updateOne({_id: req.body.decoded_token.user_id}, employee)
+                .then(result => {
+                    if(result.n > 0){
+                        res.status(200).json({
+                            message: "edited successfully!"
+                        });
+                    }else{
+                        res.status(401).json({
+                            message: "authorization failed!"
+                        });
+                    }
+                });
+
+        }else{  //employer
+            const employer = new employer_model({
+                _id: req.body.decoded_token.user_id,
+                company_name: req.body.company_name,
+                established_year: req.body.established_year,
+                company_address: req.body.company_address,
+                company_phone: req.body.company_phone,
+                job_fields: req.body.job_fields
+            });
+            employer_model.updateOne({_id: req.body.decoded_token.user_id}, employee)
+                .then(result => {
+                    if(result.n > 0){
+                        res.status(200).json({
+                            message: "edited successfully!"
+                        });
+                    }else{
+                        res.status(401).json({
+                            message: "authorization failed!"
+                        });
+                    }
+                });
+        }
     }
 };
 

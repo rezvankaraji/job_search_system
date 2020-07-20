@@ -12,7 +12,6 @@ module.exports = {
                         message: "authorization failed!"
                     });
                 }
-
                 const request = new request_model({
                     employee_id: employee._id,
                     job_id: req.body.job_id
