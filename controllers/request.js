@@ -27,16 +27,5 @@ module.exports = {
                     });
                 }); 
             });
-    },
-
-    show: function(req, res){
-        request_model.find()
-        .then(documents => {
-            res.status(200).json({
-                message: "requests fetched successfully",
-                requests: documents
-            });
-        })
-        .limit(req.query.page_size).skip(req.query.page_size * (req.query.current_page - 1));
-    },
+    }
 };

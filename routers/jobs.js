@@ -36,9 +36,7 @@ router.post("/add", check_auth, multer({storage: storage}).single("image"), job.
 
 router.patch("/edit", check_auth, job.edit);
 
-router.post("/show/all", job.show);    //general show to un registered users
-
-//router.post("/show/auto_filtered", check_auth, job.show_employee)   //show jobs to each employer
+router.post("/show/all", job.show);    //general show jobs
 
 router.post("/show/my-jobs", check_auth, job.show_employer);     //show jobs to each employer
 
