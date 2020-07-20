@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const employee_model = require("../models/employee");
 const employer_model = require("../models/employer");
+const employer = require('../models/employer');
 
 module.exports = {
     signup: function(req, res){
@@ -114,38 +115,46 @@ module.exports = {
     },
 
     edit_profile: function(req, res){
-        if(req.body.decoded_token.user_name){   //employee
-            const employee = new employee_model({
-                _id: req.body.decoded_token.user_id,
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
-                age: req.body.age,
-                //cv: req.body.cv,
-                skills: req.body.skills
-            });
-            employee_model.updateOne({_id: req.body.decoded_token.user_id}, employee)
-                .then(result => {
-                    if(result.n > 0){
-                        res.status(200).json({
-                            message: "edited successfully!"
-                        });
-                    }else{
-                        res.status(401).json({
-                            message: "authorization failed!"
-                        });
-                    }
-                });
+        employee_model.findOne({_id: req.body.decoded_token.user_id})
+            .then(employee => {
+                if(!employee){
 
-        }else{  //employer
-            const employer = new employer_model({
-                _id: req.body.decoded_token.user_id,
-                company_name: req.body.company_name,
-                established_year: req.body.established_year,
-                company_address: req.body.company_address,
-                company_phone: req.body.company_phone,
-                job_fields: req.body.job_fields
-            });
-            employer_model.updateOne({_id: req.body.decoded_token.user_id}, employee)
+                    const employer = new employer_model({
+                        _id: req.body.decoded_token.user_id,
+                        company_name: req.body.company_name,
+                        established_year: req.body.established_year,
+                        company_address: req.body.company_address,
+                        company_phone: req.body.company_phone,
+                        job_fields: req.body.job_fields
+                    });
+                    employer_model.updateOne({_id: req.body.decoded_token.user_id}, employer)
+                        .then(result => {
+                            if(result.n > 0){
+                                res.status(200).json({
+                                    message: "edited successfully!"
+                                });
+                            }else{
+                                res.status(401).json({
+                                    message: "authorization failed!"
+                                });
+                            }
+                        });
+
+                }
+                const url = req.protocol + '://' + req.get("host");
+                let cv_path = employee.cv_path;
+                if(req.file){
+                    cv_path = url + "/CVs/" + req.file.filename;
+                }
+                const new_employee = new employee_model({
+                    _id: req.body.decoded_token.user_id,
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    cv_path: cv_path,
+                    age: req.body.age,
+                    skills: req.body.skills
+                });
+                employee_model.updateOne({_id: employee._id}, new_employee)
                 .then(result => {
                     if(result.n > 0){
                         res.status(200).json({
@@ -157,7 +166,7 @@ module.exports = {
                         });
                     }
                 });
-        }
+        });
     }
 };
 

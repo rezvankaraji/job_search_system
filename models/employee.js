@@ -8,7 +8,7 @@ const employee_schema = mongoose.Schema({
     password: { type: String, required: true },
     age: { type: Number },
     gender: { type: String, default: 'other' },
-    cv: { },
+    cv_path: { type: String },
     skills: { type: Array }
 });
 
