@@ -115,9 +115,5 @@ module.exports = {
                     .limit(req.query.page_size)
                     .skip(req.query.page_size * (req.query.current_page - 1));
             });
-    },
-
-    search: function(req, res){
-
     }
 };

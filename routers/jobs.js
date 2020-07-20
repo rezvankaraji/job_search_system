@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const job = require("../controllers/job")
 const filter = require("../controllers/job_filter")
+const search = require("../controllers/job_search")
 
 const check_auth = require('../middleware/check_auth')
 
@@ -41,8 +42,8 @@ router.post("/show/all", job.show);    //general show to un registered users
 
 router.post("/show/my-jobs", check_auth, job.show_employer);     //show jobs to each employer
 
-router.post("/search", job.search);    //no idea!
+router.post("/search", search.on_title);    //no idea!
 
-router.post("/filter", filter.salary);    //filter 2ta parametr min salary va max salary dare
+router.post("/filter", filter.on_salary);    //filter 2ta parametr min salary va max salary dare
 
 module.exports = router;
