@@ -33,11 +33,13 @@ const storage = multer.diskStorage({
 
 router.post("/add", check_auth, multer({storage: storage}).single("image"), job.create);
 
-router.patch("/edit/:id", check_auth, job.edit);
+router.patch("/edit", check_auth, job.edit);
+c
+router.post("/show/all", job.show);    //general show to un registered users
 
-router.post("/show/all", job.show);    //general show
+router.post("/show/auto_filtered", check_auth, job.show_employee)   //show jobs to each employer
 
-router.post("/show/my-jobs", check_auth, job.show);     //show jobs to each employer
+router.post("/show/my-jobs", check_auth, job.show_employer);     //show jobs to each employer
 
 router.post("/search", job.search);    //no idea!
 
