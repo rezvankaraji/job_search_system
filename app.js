@@ -20,11 +20,11 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content_Type, Accept"
+        "Origin, X-Requested-With, Content_Type, Accept, Authorization"
     );
     res.setHeader(
         "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS"
+        "GET, POST, PATCH, DELETE, OPTIONS"
     );
 
     next();
@@ -36,6 +36,9 @@ app.use('/job', job_routes);
 
 const request_routes = require('./routers/requests');
 app.use('/request', request_routes);
+
+const user_routes = require('./routers/user');
+app.use(user_routes);
 
 
 // Start Listening To The Server

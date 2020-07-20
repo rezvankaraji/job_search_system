@@ -1,7 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const request = require("./controllers/request")
+const request = require("../controllers/request");
 
-router.post("/add", request.create);
+const check_auth = require('../middleware/check_auth')
+
+const router = express.Router();
+
+router.post("/add", check_auth, request.create);
 
 module.exports = router;

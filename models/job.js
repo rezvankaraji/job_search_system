@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const job_schema = mongoose.Schema({
-    employer_id: {type: String, required: true },
+    employer_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Employer', required: true },
     title: { type: String, required: true },
     image_path: { type: String },
     expiration_date: { type: Date },

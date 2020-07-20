@@ -3,6 +3,8 @@ const multer = require('multer');
 const job = require("../controllers/job")
 const filter = require("../controllers/job_filter")
 
+const check_auth = require('../middleware/check_auth')
+
 const router = express.Router();
 
 //process image
@@ -29,11 +31,13 @@ const storage = multer.diskStorage({
     }
 });
 
-router.post("/add", multer({storage: storage}).single("image"), job.create);
+router.post("/add", check_auth, multer({storage: storage}).single("image"), job.create);
 
-router.patch("/edit/:id", job.edit);
+router.patch("/edit/:id", check_auth, job.edit);
 
-router.post("/show", job.show);    //inja byd moshakhas beshe ke taraf karfarmas ya karjoo va vase harkodom joda amal kone
+router.post("/show/all", job.show);    //general show
+
+router.post("/show/my-jobs", check_auth, job.show);     //show jobs to each employer
 
 router.post("/search", job.search);    //no idea!
 
