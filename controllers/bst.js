@@ -2,101 +2,130 @@
 
 class Node 
 { 
-    constructor(data) 
+    constructor(data, value) 
     { 
-        this.key = data.user_id; 
-        this.value = data.salary
+        this.data = data; 
+        this.value = value;
         this.left = null; 
         this.right = null; 
+        this.flag = 0;
     } 
 } 
 
-class BinarySearchTree 
+class binary_search_tree 
 { 
     constructor() 
     { 
         this.root = null; 
     } 
   
-    insert(data) 
+    insert(data, value) 
     { 
     
-        let new_node = new Node(data); 
+        let new_node = new Node(data, value); 
         if(this.root === null) 
             this.root = new_node; 
         else
             this.insert_node(this.root, new_node); 
     } 
   
-    insert_node(node, new_node) 
+    insert_node(root, new_node) 
     { 
-        if(new_node.value < node.value) 
+        if(new_node.value < root.value) 
         { 
-            if(node.left === null) 
-                node.left = new_node; 
+            if(root.left === null) 
+                root.left = new_node; 
             else  
-                this.insert_node(node.left, new_node);  
+                this.insert_node(root.left, new_node);  
         } else
         { 
-            if(node.right === null) 
-                node.right = new_node; 
+            if(root.right === null) 
+                root.right = new_node; 
             else
-                this.insert_node(node.right, new_node); 
+                this.insert_node(root.right, new_node); 
         } 
     } 
 
-    remove(data) 
+    remove(data, value) 
     { 
-        let value = data.salary;
+        let value = value;
         this.root = this.remove_node(this.root, value); 
     } 
 
-    remove_node(node, value) 
+    remove_node(root, value) 
     {
-        if(node === null) 
+        if(root === null) 
             return null; 
       
-        else if(value < node.value) 
+        else if(value < root.value) 
         { 
-            node.left = this.remove_node(node.left, value); 
-            return node; 
-        } else if(value > node.value) 
+            root.left = this.remove_node(root.left, value); 
+            return root; 
+        } else if(value > root.value) 
         { 
-            node.right = this.remove_node(node.right, value); 
-            return node; 
+            root.right = this.remove_node(root.right, value); 
+            return root; 
         } else
         { 
-            if(node.left === null && node.right === null) 
+            if(root.left === null && root.right === null) 
             { 
-                node = null; 
-                return node; 
-            } else if(node.left === null) 
+                root = null; 
+                return root; 
+            } else if(root.left === null) 
             { 
-                node = node.right; 
-                return node; 
-            } else if(node.right === null) 
+                root = root.right; 
+                return root; 
+            } else if(root.right === null) 
             { 
-                node = node.left; 
-                return node; 
+                root = root.left; 
+                return root; 
             } 
 
-            var alternative = this.find_min_node(node.right); 
-            node.value = alternative.value; 
-            node.key = alternative.key;
+            var alternative = this.find_min_node(root.right); 
+            root.value = alternative.value; 
+            root.data = alternative.data;
       
-            node.right = this.remove_node(node.right, alternative.value); 
-            return node; 
+            root.right = this.remove_node(root.right, alternative.value); 
+            return root; 
         }  
     } 
 
-    find_min_node(node) 
+    find_min_node(root) 
     { 
-        if(node.left === null) 
-            return node; 
+        if(root.left === null) 
+            return root; 
         else
-            return this.find_min_node(node.left); 
+            return this.find_min_node(root.left); 
     } 
-  
     
-    
-} 
+    get_nodes_in(min, max)
+    {
+        let nodes = [];
+        return this.get_nodes(nodes, this.root, min, max);
+    }
+
+    get_nodes(nodes, root, min, max)
+    {
+        if(root.value <= min)
+        {   
+            if(root.value === min)
+                nodes.push(root);
+            if(root.right !== null)
+                this.get_nodes(nodes, root.right, min, max);
+        }else if(root.value >= max)
+        {   
+            if(root.value === max)
+                nodes.push(root);
+            if(root.left !== null)
+                this.get_nodes(nodes, root.left, min, max);
+        }else
+        {
+            nodes.push(root);
+            this.get_nodes(nodes, root.right, root.value, max);
+            this.get_nodes(nodes, root.left, min, root.value);
+        }
+        return nodes;
+    }  
+}
+
+module.exports = binary_search_tree;

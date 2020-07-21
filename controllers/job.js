@@ -85,18 +85,6 @@ module.exports = {
         .skip(req.query.page_size * (req.query.current_page - 1));
     },
 
-    // show_employee: function(req, res){
-    //     job_model.find()
-    //     .then(documents => {
-    //         res.status(200).json({
-    //             message: "jobs fetched successfully",
-    //             jobs: documents
-    //         });
-    //     })
-    //     .limit(req.query.page_size)
-    //     .skip(req.query.page_size * (req.query.current_page - 1));
-    // },
-
     show_employer: function(req, res){
         employer_model.findOne({_id: req.body.decoded_token.user_id})
             .then(employer => {
