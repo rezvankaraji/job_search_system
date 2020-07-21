@@ -34,12 +34,12 @@ module.exports = {
                             message: "user created",
                             result: result
                         });
-                    })
-                    .catch(error => {
-                        res.status(500).json({
-                            error: error
-                        });
                     });
+            })
+            .catch(error => {
+                res.status(500).json({
+                    message: "invalid credentials!"
+                });
             });
     },
 
@@ -166,7 +166,12 @@ module.exports = {
                         });
                     }
                 });
-        });
+            })
+            .catch(error => {
+                res.status(500).json({
+                    message: "editing the profile failed!"
+                });
+            });
     }
 };
 

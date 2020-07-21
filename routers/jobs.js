@@ -42,6 +42,6 @@ router.post("/show/my-jobs", check_auth, job.show_employer);     //show jobs to 
 
 router.post("/search", search.on_title);    //no idea!
 
-router.post("/filter", filter.on_salary);    //filter 2ta parametr min salary va max salary dare
+router.post("/filter", filter.on_salary);    
 
 module.exports = router;

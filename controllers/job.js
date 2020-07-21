@@ -23,13 +23,19 @@ module.exports = {
                     job_fields: req.body.job_fields,
                     work_hour: req.body.work_hour
                 });
-                job.save().then( created_job => {
-                    res.status(201).json({
-                        message: "job successfully added",
-                        job: {
-                            ...created_job,
-                            id: created_job._id
-                        }
+                job.save()
+                    .then( created_job => {
+                        res.status(201).json({
+                            message: "job successfully added",
+                            job: {
+                                ...created_job,
+                                id: created_job._id
+                            }
+                        })
+                    .catch( error => {
+                        res.status(500).json({
+                            message: "creating the job failed!"
+                        });
                     });
                 }); 
         
@@ -69,6 +75,11 @@ module.exports = {
                                 message: "authorization failed!"
                             });
                         }
+                    })
+                    .catch( error => {
+                        res.status(500).json({
+                            message: "editing the job failed!"
+                        });
                     });
             });
     },
@@ -82,7 +93,12 @@ module.exports = {
             });
         })
         .limit(req.query.page_size)
-        .skip(req.query.page_size * (req.query.current_page - 1));
+        .skip(req.query.page_size * (req.query.current_page - 1))
+        .catch( error => {
+            res.status(500).json({
+                message: "fetching jobs failed!"
+            });
+        });
     },
 
     show_employer: function(req, res){
@@ -101,7 +117,12 @@ module.exports = {
                         });
                     })
                     .limit(req.query.page_size)
-                    .skip(req.query.page_size * (req.query.current_page - 1));
+                    .skip(req.query.page_size * (req.query.current_page - 1))
+                    .catch( error => {
+                        res.status(500).json({
+                            message: "fetching jobs failed!"
+                        });
+                    });
             });
     }
 };

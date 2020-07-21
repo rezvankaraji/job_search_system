@@ -18,6 +18,11 @@ module.exports = {
                     message: "jobs fetched and filtered successfully",
                     jobs: filtered_jobs
                 });
+            })
+            .catch( error => {
+                res.status(500).json({
+                    message: "fetching jobs failed!"
+                });
             });
     }
 };
