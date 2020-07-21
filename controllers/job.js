@@ -31,14 +31,13 @@ module.exports = {
                                 ...created_job,
                                 id: created_job._id
                             }
-                        })
+                        });
+                    })
                     .catch( error => {
                         res.status(500).json({
                             message: "creating the job failed!"
                         });
                     });
-                }); 
-        
             }); 
     },
 
@@ -51,7 +50,7 @@ module.exports = {
                     });
                 }
                 const url = req.protocol + '://' + req.get("host");
-                let image_path = url + "/images/default.jpg";
+                let image_path = employer.image_path;
                 if(req.file){
                     image_path = url + "/images/" + req.file.filename;
                 }
@@ -92,8 +91,6 @@ module.exports = {
                 jobs: documents
             });
         })
-        .limit(req.query.page_size)
-        .skip(req.query.page_size * (req.query.current_page - 1))
         .catch( error => {
             res.status(500).json({
                 message: "fetching jobs failed!"
@@ -116,8 +113,6 @@ module.exports = {
                             jobs: documents
                         });
                     })
-                    .limit(req.query.page_size)
-                    .skip(req.query.page_size * (req.query.current_page - 1))
                     .catch( error => {
                         res.status(500).json({
                             message: "fetching jobs failed!"

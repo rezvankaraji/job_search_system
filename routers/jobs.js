@@ -12,9 +12,9 @@ router.post("/add", check_auth, add_image, job.create);
 
 router.patch("/edit", check_auth, job.edit);
 
-router.post("/show/all", job.show);    //general show jobs
+router.get("/show/all", job.show);    //general show jobs
 
-router.post("/show/my-jobs", check_auth, job.show_employer);     //show jobs to each employer
+router.get("/show/my-jobs", check_auth, job.show_employer);     //show jobs to each employer
 
 //router.post("/search", search.on_title);
 
